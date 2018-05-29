@@ -5,7 +5,7 @@ workspace:
 pipeline:
   build:
     image: plugins/gcr
-    registry: eu.gcr.io
+    # registry: eu.gcr.io
     # repo: bold-upgrade-182112/drone-pg
     commands:
       - env
