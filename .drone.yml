@@ -1,0 +1,13 @@
+workspace:
+  base: /drone
+  path: /tmp
+
+pipeline:
+  build:
+    image: plugins/gcr
+    registry: eu.gcr.io
+    # repo: bold-upgrade-182112/drone-pg
+    commands:
+      - env
+    when:
+      event: [push]
