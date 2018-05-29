@@ -4,9 +4,7 @@ workspace:
 
 pipeline:
   build:
-    image: plugins/gcr
-    # registry: eu.gcr.io
-    # repo: bold-upgrade-182112/drone-pg
+    image: smebberson/alpine-nginx
     commands:
       - env
     when:
