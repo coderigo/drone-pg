@@ -7,8 +7,8 @@ pipeline:
     image: smebberson/alpine-nginx
     commands:
       - env
-      - echo -n build-${DRONE_BUILD_NUMBER}
-      - echo -n commit-${DRONE_COMMIT_SHA:0:8}
-      - echo -n version-${DRONE_TAG}
+      - echo build-${DRONE_BUILD_NUMBER}
+      - echo commit-${DRONE_COMMIT_SHA:0:8}
+      - echo version-${DRONE_TAG}
     when:
       event: [push]
