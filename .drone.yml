@@ -7,6 +7,5 @@ pipeline:
     image: golang:1.9
     commands:
       - ./teston-tag-docker-image.sh
-      -
     when:
       event: [push]
