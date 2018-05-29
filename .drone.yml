@@ -6,6 +6,7 @@ pipeline:
   build:
     image: smebberson/alpine-nginx
     commands:
+      - apt-get update && apt-get install -y git
       - env
       - echo "tag=build-${DRONE_BUILD_NUMBER}"
       - echo "tag=commit-${DRONE_COMMIT_SHA:0:8}"
