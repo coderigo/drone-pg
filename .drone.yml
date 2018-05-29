@@ -9,6 +9,6 @@ pipeline:
       - env
       - echo "tag=build-${DRONE_BUILD_NUMBER}"
       - echo "tag=commit-${DRONE_COMMIT_SHA:0:8}"
-      - echo "tag=version-${DRONE_TAG}"
+      - echo "tag=version-${DRONE_COMMIT_TAG}"
     when:
       event: [push]
