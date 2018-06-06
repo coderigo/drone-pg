@@ -13,7 +13,7 @@ pipeline:
   publish:
     image: teston-gcloud
     repo: eu.gcr.io/bold-upgrade-182112
-    repository: eu.gcr.io/bold-upgrade-182112
+    # repository: eu.gcr.io/bold-upgrade-182112
     # registry: eu.gcr.io
     secrets: [ gcr_json_key ]
     commands:
