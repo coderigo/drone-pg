@@ -11,8 +11,10 @@ pipeline:
       event: [push]
 
   publish:
-    image: bold-upgrade-182112/teston-gcloud
-    registry: eu.gcr.io
+    image: teston-gcloud
+    repo: eu.gcr.io/bold-upgrade-182112
+    repository: eu.gcr.io/bold-upgrade-182112
+    # registry: eu.gcr.io
     secrets: [ gcr_json_key ]
     commands:
       - ls
