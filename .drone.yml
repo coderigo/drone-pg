@@ -6,6 +6,18 @@ pipeline:
   build:
     image: golang:1.9
     commands:
-      - ./teston-tag-docker-image.sh
+      - env
     when:
       event: [push]
+
+  publish:
+    image: eu.gcr.io/bold-upgrade-182112/teston-gcloud
+    secrets: [ gcr_json_key ]
+    commands:
+      - ls
+      - env
+      - teston-drone-get-tag commit
+      - teston-docker-build-image
+    # when:
+      # event: push
+      # branch: master
