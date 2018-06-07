@@ -14,10 +14,9 @@ pipeline:
     image: eu.gcr.io/bold-upgrade-182112/teston-gcloud
     secrets: [ gcr_json_key ]
     commands:
-      - ls
-      - env
       - teston-drone-get-tag commit
-      - teston-docker-build-image
+      - teston-gcr-login
+      # - teston-docker-build-image
     # when:
       # event: push
       # branch: master
