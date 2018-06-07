@@ -15,6 +15,7 @@ pipeline:
     secrets: [ gcr_json_key ]
     commands:
       - teston-drone-get-tag commit
+      - teston-drone-get-tag build
       - teston-gcr-login
       # - teston-docker-build-image
     # when:
