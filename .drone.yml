@@ -13,23 +13,18 @@ pipeline:
     image: eu.gcr.io/bold-upgrade-182112/teston-gcloud
     pull: true
     commands:
+      - pwd
+      - ls
       - teston-docker-make-tags-file
 
-  docker_publish_image:
+  docker_push_image:
     image: plugins/gcr
     registry: eu.gcr.io
     repo: bold-upgrade-182112/teston-pg
     secrets: [ gcr_json_key ]
 
-  # publish:
-  #   image: eu.gcr.io/bold-upgrade-182112/teston-gcloud:latest
-  #   secrets: [ gcr_json_key ]
-  #   pull: true
-  #   commands:
-  #     - teston-drone-get-tag commit
-  #     - teston-drone-get-tag build
-  #     - teston-gcr-login
-      # - teston-docker-build-image
-    # when:
-      # event: push
-      # branch: master
+  k8s_deploy_dev:
+    image: eu.gcr.io/bold-upgrade-182112/teston-gcloud
+    commands:
+      - teston-docker-custom-tag-image dev
+      - teston-k8s-deploy-image dev
