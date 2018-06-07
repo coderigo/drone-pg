@@ -18,6 +18,8 @@ pipeline:
       - teston-drone-get-tag commit
       - teston-drone-get-tag build
       - teston-gcr-login
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       # - teston-docker-build-image
     # when:
       # event: push
