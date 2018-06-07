@@ -11,16 +11,26 @@ pipeline:
   #     event: [push]
 
   publish:
-    image: eu.gcr.io/bold-upgrade-182112/teston-gcloud:latest
+    image: plugins/gcr
+    registry: eu.gcr.io
+    repo: bold-upgrade-182112/teston-pg
     secrets: [ gcr_json_key ]
-    pull: true
-    privileged: true
+    tags:
+      - '${DRONE_COMMIT:0:8}'
     commands:
-      - teston-drone-get-tag commit
-      - teston-drone-get-tag build
-      - teston-gcr-login
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ls
+    when:
+      event: push
+      branch: master
+
+  # publish:
+  #   image: eu.gcr.io/bold-upgrade-182112/teston-gcloud:latest
+  #   secrets: [ gcr_json_key ]
+  #   pull: true
+  #   commands:
+  #     - teston-drone-get-tag commit
+  #     - teston-drone-get-tag build
+  #     - teston-gcr-login
       # - teston-docker-build-image
     # when:
       # event: push
