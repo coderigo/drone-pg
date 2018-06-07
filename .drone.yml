@@ -19,7 +19,7 @@ pipeline:
   docker_push_image:
     image: plugins/gcr
     registry: eu.gcr.io
-    repo: bold-upgrade-182112/teston-pg
+    repo: bold-upgrade-182112/drone-pg
     secrets: [ gcr_json_key ]
 
   k8s_deploy_dev:
