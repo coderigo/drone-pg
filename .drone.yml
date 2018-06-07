@@ -12,11 +12,11 @@ pipeline:
 
   publish:
     image: plugins/gcr
-    registry: eu.gcr.io
-    repo: bold-upgrade-182112/teston-pg
+    # registry: eu.gcr.io
+    # repo: bold-upgrade-182112/teston-pg
     secrets: [ gcr_json_key ]
-    tags:
-      - '${DRONE_COMMIT:0:8}'
+    # tags:
+    #   - '${DRONE_COMMIT:0:8}'
     commands:
       - ls
     when:
