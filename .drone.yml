@@ -13,9 +13,8 @@ pipeline:
     image: eu.gcr.io/bold-upgrade-182112/teston-gcloud
     pull: true
     commands:
-      - pwd
-      - ls
       - teston-docker-make-tags-file
+      - ls
 
   docker_push_image:
     image: plugins/gcr
@@ -26,5 +25,4 @@ pipeline:
   k8s_deploy_dev:
     image: eu.gcr.io/bold-upgrade-182112/teston-gcloud
     commands:
-      - teston-docker-custom-tag-image dev
       - teston-k8s-deploy-image dev
