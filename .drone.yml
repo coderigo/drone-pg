@@ -3,15 +3,15 @@ workspace:
   path: /tmp
 
 pipeline:
-  build:
-    image: golang:1.9
-    commands:
-      - env
-    when:
-      event: [push]
+  # build:
+  #   image: golang:1.9
+  #   commands:
+  #     - env
+  #   when:
+  #     event: [push]
 
   publish:
-    image: eu.gcr.io/bold-upgrade-182112/teston-gcloud
+    image: eu.gcr.io/bold-upgrade-182112/teston-gcloud:latest
     secrets: [ gcr_json_key ]
     commands:
       - teston-drone-get-tag commit
