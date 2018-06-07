@@ -18,10 +18,11 @@ pipeline:
     # tags:
     #   - '${DRONE_COMMIT:0:8}'
     commands:
+      - env
       - ls
-    when:
-      event: push
-      branch: master
+    # when:
+    #   event: push
+    #   branch: master
 
   # publish:
   #   image: eu.gcr.io/bold-upgrade-182112/teston-gcloud:latest
