@@ -12,8 +12,9 @@ pipeline:
 
   publish:
     image: eu.gcr.io/bold-upgrade-182112/teston-gcloud:latest
-    pull: true
     secrets: [ gcr_json_key ]
+    pull: true
+    privileged: true
     commands:
       - teston-drone-get-tag commit
       - teston-drone-get-tag build
