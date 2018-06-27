@@ -99,7 +99,10 @@ output zip file: ${config.outputZipFile}
             })
             .checkout('master', errorHandler)
             .merge([config.targetBranch, '--no-ff', '-m', `${config.commitMessage}`], errorHandler)
-            .exec(async () => await require('child_process').exec(`git tag -a ${config.nextTagName} && git push origin ${config.nextTagName}`))
+            .exec(async () => {
+                return await require('child_process')
+                        .exec(`git tag -a ${config.nextTagName} && git push origin ${config.nextTagName}`);
+            })
             .checkout(config.currentBranch, errorHandler)
             .exec(() => {
                 console.log('Done. Inspect results and then: git checkout master && git push');
