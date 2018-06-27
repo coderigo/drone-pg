@@ -101,9 +101,10 @@ output zip file: ${config.outputZipFile}
         await execFile('git', ['checkout', 'master']);
         await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, config.targetBranch]);
         await git.branchLocal((err, result) => {
-            console.log(err, result);
+            const { commit } = result.branches.find(branch => branch.current);
+            config.masterCommit = commit;
         });
-        await execFile('git', ['tag', '-a', '-m', config.nextTagName, 'master']);
+        await execFile('git', ['tag', '-a', '-m', config.nextTagName, config.masterCommit]);
         await execFile('git', ['push', '-v', 'origin', `refs/tags/${config.nextTagName}`]);
         await execFile('git', ['push', 'origin']);
 
