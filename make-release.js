@@ -13,7 +13,7 @@ cli.version('0.1.0')
     .parse(process.argv);
 
 const config = Object.assign({ semverLevel: undefined, targetBranch: null },
-                             ({ semverLevel: cli.semverLevel, targetBranch: cli.targetBranch ));
+                             ({ semverLevel: cli.semverLevel, targetBranch: cli.targetBranch }));
 config.isMergeableBranch = /^develop$|^hotfix\/./.test(config.targetBranch);
 config.isHotfix = /^hotfix\/./.test(config.targetBranch);
 config.isNormalRelease = !config.isHotfix;
