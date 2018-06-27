@@ -96,10 +96,10 @@ output zip file: ${config.config.outputZipFile}
                 await git.add(commitableFiles, errorHandler).commit(config.commitMessage);
             })
             .mergeFromTo(config.targetBranch, 'master', ['--no-ff', '-m', `"${config.commitMessage}"`], errorHandler)
-            .checkout(config.currentBranch, errorHandler);
+            .checkout(config.currentBranch, errorHandler)
             .exec(() => {
                 console.log('Done. Inspect results and then: git checkout master && git push ');
-            })
+            });
 };
 
 release();
