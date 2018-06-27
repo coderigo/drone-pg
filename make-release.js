@@ -96,6 +96,7 @@ output zip file: ${config.outputZipFile}
                 await git.exec(() => require('child_process').exec(`git archive -o ${config.outputZipFile}`));
                 const commitableFiles = [...updatableFiles, ...[config.outputZipFile]];
                 await git.add(commitableFiles, errorHandler).commit(config.commitMessage);
+                console.log('DOne archiving');
             })
             .checkout('master', errorHandler)
             .merge([config.targetBranch, '--no-ff', '-m', `${config.commitMessage}`], errorHandler)
