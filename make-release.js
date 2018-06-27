@@ -4,6 +4,7 @@ const semverLevels = ['major', 'minor', 'patch'];
 const path = require('path');
 const fs = require('fs');
 const git = require('simple-git')(path.resolve('.'));
+const { execFile } = require('child_process');
 
 // Parse command options
 cli.version('0.1.0')
@@ -83,31 +84,33 @@ release branch: ${config.releaseBranchName}
 output zip file: ${config.outputZipFile}
 ================================================================`);
 
-    await git
-            .checkout('master', errorHandler)
-            .pull(errorHandler)
-            .checkout(config.targetBranch, errorHandler)
-            .exec(async () => {
-                if (!config.isHotfix) {
-                    await git.checkoutLocalBranch(config.releaseBranchName, errorHandler);
-                }
-                const updatableFiles = ['./package.json', './package-lock.json','./src/manifest.json'];
-                updatableFiles.map(filePath => setVersion(filePath, config.nextVersion));
-                await git.exec(() => require('child_process').exec(`git archive -o ${config.outputZipFile}`));
-                const commitableFiles = [...updatableFiles, ...[config.outputZipFile]];
-                await git.add(commitableFiles, errorHandler).commit(config.commitMessage);
-                console.log('DOne archiving');
-            })
-            .checkout('master', errorHandler)
-            .merge([config.targetBranch, '--no-ff', '-m', `${config.commitMessage}`], errorHandler)
-            .exec(async () => {
-                return await require('child_process')
-                        .exec(`git tag -a ${config.nextTagName} && git push origin ${config.nextTagName}`);
-            })
-            .checkout(config.currentBranch, errorHandler)
-            .exec(() => {
-                console.log('Done. Inspect results and then: git checkout master && git push');
-            });
+        const { stdout, stderr } = await execFile('git', ['checkout', 'master']);
+        console.log(stdout, stderr);
+    // await git
+    //         .checkout('master', errorHandler)
+    //         .pull(errorHandler)
+    //         .checkout(config.targetBranch, errorHandler)
+    //         .exec(async () => {
+    //             if (!config.isHotfix) {
+    //                 await git.checkoutLocalBranch(config.releaseBranchName, errorHandler);
+    //             }
+    //             const updatableFiles = ['./package.json', './package-lock.json','./src/manifest.json'];
+    //             updatableFiles.map(filePath => setVersion(filePath, config.nextVersion));
+    //             await git.exec(() => require('child_process').exec(`git archive -o ${config.outputZipFile}`));
+    //             const commitableFiles = [...updatableFiles, ...[config.outputZipFile]];
+    //             await git.add(commitableFiles, errorHandler).commit(config.commitMessage);
+    //             console.log('DOne archiving');
+    //         })
+    //         .checkout('master', errorHandler)
+    //         .merge([config.targetBranch, '--no-ff', '-m', `${config.commitMessage}`], errorHandler)
+    //         .exec(async () => {
+    //             return await require('child_process')
+    //                     .exec(`git tag -a ${config.nextTagName} && git push origin ${config.nextTagName}`);
+    //         })
+    //         .checkout(config.currentBranch, errorHandler)
+    //         .exec(() => {
+    //             console.log('Done. Inspect results and then: git checkout master && git push');
+    //         });
 };
 
 release();
