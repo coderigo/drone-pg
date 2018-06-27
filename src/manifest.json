@@ -3,7 +3,7 @@
   "default_locale": "en",
   "short_name": "Teston",
   "name": "Teston Chrome",
-  "version": "1.22.0",
+  "version": "1.22.1",
   "description": "__MSG_extDesc__",
   "icons": {
     "16": "img/teston-16x16.png",
