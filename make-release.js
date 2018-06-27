@@ -98,7 +98,7 @@ output zip file: ${config.outputZipFile}
                 await git.add(commitableFiles, errorHandler).commit(config.commitMessage);
             })
             .checkout('master', errorHandler)
-            .merge([config.targetBranch, '--no-ff', '-m', `"${config.commitMessage}"`], errorHandler)
+            .merge([config.targetBranch, '--no-ff', '-m', `${config.commitMessage}`], errorHandler)
             .tag(['-a', config.nextTagName])
             .push('origin', 'master', [config.nextTagName])
             .checkout(config.currentBranch, errorHandler)
