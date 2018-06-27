@@ -101,13 +101,19 @@ output zip file: ${config.outputZipFile}
 
         await execFile('git', ['checkout', 'develop']);
         await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
+<<<<<<< Updated upstream
         await execFile('git', ['push', 'origin']);
+=======
+        await execFile('git', ['push', 'origin', 'develop']);
+>>>>>>> Stashed changes
 
         await execFile('git', ['checkout', 'master']);
         await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
         await git.addTag(config.nextTagName, errorHandler);
-        await execFile('git', ['push', '-v', 'origin', `refs/tags/${config.nextTagName}`]);
-        await execFile('git', ['push', 'origin']);
+        await execFile('git', ['push', 'origin', `refs/tags/${config.nextTagName}`]);
+        await execFile('git', ['push', 'origin', 'master']);
+
+        await execFile('git', ['branch', '-d', branchToMerge]);
 
         process.exit(0);
 };
