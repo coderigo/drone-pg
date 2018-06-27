@@ -106,9 +106,11 @@ output zip file: ${config.outputZipFile}
             errorHandler(error);
             console.log(result);
         });
-        // await execFile('git', ['tag', '-a', '--message', config.nextTagName]);
         await execFile('git', ['push', '-v', 'origin', `refs/tags/${config.nextTagName}`]);
-        await execFile('git', ['push', 'origin']);
+
+        if (config.pushOnComplete) {
+            await execFile('git', ['push', 'origin']);
+        }
 
         if (config.isHotfix) {
             await execFile('git', ['checkout', 'develop']);
