@@ -44,8 +44,8 @@ const errorHandler = (error) => {
 const setVersion = (filePath, version) => {
     let file = require(path.resolve(filePath));
     file.version = version;
-    console.log(filePath);
-    return fs.writeFileSync(filePath, JSON.stringify(file, null, 2))
+    console.log(`${filePath} -> ${version}`);
+    fs.writeFileSync(filePath, JSON.stringify(file, null, 2))
 };
 
 // Release function
@@ -111,7 +111,7 @@ output zip file: ${config.outputZipFile}
         }
 
         await execFile('git', ['checkout', 'master']);
-        console.log('DONE');
+        process.exit(0);
     // await git
     //         .checkout('master', errorHandler)
     //         .pull(errorHandler)
