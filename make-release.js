@@ -10,11 +10,10 @@ const { execFile } = require('child_process');
 cli.version('0.1.0')
     .option('-lvl --semver-level [semverLevel]', `One of ${semverLevels.join('|')}. Ignored when --is-hotfix supplied.`)
     .option('-b --target-branch <targetBranch>', 'Branch to release. One of develop|hotfix/*')
-    .option('-p --push-on-complete [pushOnComplete]')
     .parse(process.argv);
 
-const config = Object.assign({ semverLevel: undefined, targetBranch: null, pushOnComplete: false },
-                             ({ semverLevel: cli.semverLevel, targetBranch: cli.targetBranch, pushOnComplete: cli.pushOnComplete || false }));
+const config = Object.assign({ semverLevel: undefined, targetBranch: null },
+                             ({ semverLevel: cli.semverLevel, targetBranch: cli.targetBranch ));
 config.isMergeableBranch = /^develop$|^hotfix\/./.test(config.targetBranch);
 config.isHotfix = /^hotfix\/./.test(config.targetBranch);
 config.isNormalRelease = !config.isHotfix;
@@ -106,10 +105,7 @@ output zip file: ${config.outputZipFile}
         await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
         await git.addTag(config.nextTagName, errorHandler);
         await execFile('git', ['push', '-v', 'origin', `refs/tags/${config.nextTagName}`]);
-
-        if (config.pushOnComplete) {
-            await execFile('git', ['push', 'origin']);
-        }
+        await execFile('git', ['push', 'origin']);
 
         process.exit(0);
 };
