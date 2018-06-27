@@ -87,9 +87,9 @@ output zip file: ${config.outputZipFile}
         const updatableFiles = ['./package.json', './package-lock.json','./src/manifest.json'];
 
         await execFile('git', ['checkout', 'master']);
-        await execFile('git', ['pull']);
+        // await execFile('git', ['pull']);
         await execFile('git', ['checkout', config.targetBranch]);
-        await execFile('git', ['pull']);
+        // await execFile('git', ['pull']);
 
         if (config.isNormalRelease) {
             await execFile('git', ['checkout', '-b', config.releaseBranchName]);
@@ -108,11 +108,9 @@ output zip file: ${config.outputZipFile}
         await git.addTag(config.nextTagName, errorHandler);
         await execFile('git', ['push', 'origin', `refs/tags/${config.nextTagName}`]);
 
-        console.log('CHECK ALL IS GOOD AND PUSH DEVLOP AND MASTER UP');
-
-        // await execFile('git', ['push', 'origin', 'develop:develop']);
-        // await execFile('git', ['push', 'origin', 'master:master']);
-        // await execFile('git', ['branch', '-d', branchToMerge]);
+        await execFile('git', ['push', 'origin', 'develop:develop']);
+        await execFile('git', ['push', 'origin', 'master:master']);
+        await execFile('git', ['branch', '-d', branchToMerge]);
 
         process.exit(0);
 };
