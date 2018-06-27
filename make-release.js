@@ -108,10 +108,11 @@ output zip file: ${config.outputZipFile}
         await git.addTag(config.nextTagName, errorHandler);
         await execFile('git', ['push', 'origin', `refs/tags/${config.nextTagName}`]);
 
-        await execFile('git', ['push', 'origin', 'develop:develop']);
-        await execFile('git', ['push', 'origin', 'master:master']);
+        console.log('CHECK ALL IS GOOD AND PUSH DEVLOP AND MASTER UP');
 
-        await execFile('git', ['branch', '-d', branchToMerge]);
+        // await execFile('git', ['push', 'origin', 'develop:develop']);
+        // await execFile('git', ['push', 'origin', 'master:master']);
+        // await execFile('git', ['branch', '-d', branchToMerge]);
 
         process.exit(0);
 };
