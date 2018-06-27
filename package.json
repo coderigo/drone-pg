@@ -9,7 +9,9 @@
     "start": "node utils/webserver.js",
     "release": "node ./make-release.js"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "shelljs": "^0.8.2"
+  },
   "dependencies": {
     "commander": "^2.15.1",
     "semver": "^5.5.0",

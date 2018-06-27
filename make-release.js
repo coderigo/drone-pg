@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const git = require('simple-git')(path.resolve('.'));
 const { execFile } = require('child_process');
+const { exec } = require('shelljs');
 
 // Parse command options
 cli.version('0.1.0')
@@ -41,6 +42,7 @@ const errorHandler = (error) => {
         process.exit(1);
     }
 };
+
 const setVersion = (filePath, version) => {
     let file = require(path.resolve(filePath));
     file.version = version;
@@ -56,9 +58,9 @@ const release = async () => {
             const { files, staged, current } = statusSummary;
             config.currentBranch = `${current}`;
             config.gitIsClean = (statusSummary.files.length + statusSummary.staged.length) === 0;
-            if (!config.gitIsClean) {
-                errorHandler(new Error(`Current tree not clean. Stash or commit changes before attempting this again.`));
-            }
+            // if (!config.gitIsClean) {
+            //     errorHandler(new Error(`Current tree not clean. Stash or commit changes before attempting this again.`));
+            // }
         })
         .tags((error, tags) => {
             errorHandler(error);
@@ -86,31 +88,33 @@ output zip file: ${config.outputZipFile}
         const branchToMerge = config.isHotfix ? config.targetBranch : config.releaseBranchName;
         const updatableFiles = ['./package.json', './package-lock.json','./src/manifest.json'];
 
-        await execFile('git', ['checkout', 'master']);
-        // await execFile('git', ['pull']);
-        await execFile('git', ['checkout', config.targetBranch]);
-        // await execFile('git', ['pull']);
+        let code;
+        let stdout;
+        let stderr;
+
+        exec('git checkout master && git pull');
+        exec(`git checkout ${config.targetBranch} && git pull`);
 
         if (config.isNormalRelease) {
-            await execFile('git', ['checkout', '-b', config.releaseBranchName]);
+            exec(`git checkout -b ${config.releaseBranchName}`);
         }
 
-
         updatableFiles.map(filePath => setVersion(filePath, config.nextVersion));
-        await execFile('git', ['add', '.']);
-        await execFile('git', ['commit', '-a', '-m', config.commitMessage]);
+        exec(`git commit -am ${config.commitMessage}`);
+        // exec('git add .');
 
-        await execFile('git', ['checkout', 'develop']);
-        await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
+        exec('git checkout develop');
+        exec(`git merge --no-ff -m ${config.commitMessage} ${branchToMerge}`);
 
-        await execFile('git', ['checkout', 'master']);
-        await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
-        await git.addTag(config.nextTagName, errorHandler);
-        await execFile('git', ['push', 'origin', `refs/tags/${config.nextTagName}`]);
+        exec('git checkout master');
+        exec(`git merge --no-ff -m ${config.commitMessage} ${branchToMerge}`);
 
-        await execFile('git', ['push', 'origin', 'develop:develop']);
-        await execFile('git', ['push', 'origin', 'master:master']);
-        await execFile('git', ['branch', '-d', branchToMerge]);
+        exec(`git tag -a -m ${config.nextTagName}`);
+        exec('git push origin', `refs/tags/${config.nextTagName}`);
+
+        exec('git push origin develop:develop');
+        exec('git push origin master:master');
+        exec(`git branch -d ${branchToMerge}`);
 
         process.exit(0);
 };
