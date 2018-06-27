@@ -106,7 +106,10 @@ output zip file: ${config.outputZipFile}
         await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
         await git.addTag(config.nextTagName, errorHandler);
         await execFile('git', ['push', '-v', 'origin', `refs/tags/${config.nextTagName}`]);
-        await execFile('git', ['push', 'origin']);
+
+        if (config.pushOnComplete) {
+            await execFile('git', ['push', 'origin']);
+        }
 
         process.exit(0);
 };
