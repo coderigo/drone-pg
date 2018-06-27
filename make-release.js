@@ -105,7 +105,7 @@ output zip file: ${config.outputZipFile}
         exec('git checkout master');
         exec(`git merge --no-ff -m ${config.commitMessage} ${branchToMerge}`);
 
-        exec(`git tag -a -m ${config.nextTagName}`);
+        exec(`git tag -a ${config.nextTagName} -m ${config.commitMessage}`);
         exec('git push origin', `refs/tags/${config.nextTagName}`);
 
         exec('git push origin develop:develop');
