@@ -10,13 +10,14 @@ const { execFile } = require('child_process');
 cli.version('0.1.0')
     .option('-lvl --semver-level [semverLevel]', `One of ${semverLevels.join('|')}. Ignored when --is-hotfix supplied.`)
     .option('-b --target-branch <targetBranch>', 'Branch to release. One of develop|hotfix/*')
-    .option('-p --push-on-complete <pushOnComplete>')
+    .option('-p --push-on-complete [pushOnComplete]')
     .parse(process.argv);
 
 const config = Object.assign({ semverLevel: undefined, targetBranch: null, pushOnComplete: false },
                              ({ semverLevel: cli.semverLevel, targetBranch: cli.targetBranch, pushOnComplete: cli.pushOnComplete || false }));
 config.isMergeableBranch = /^develop$|^hotfix\/./.test(config.targetBranch);
 config.isHotfix = /^hotfix\/./.test(config.targetBranch);
+config.isNormalRelease = !config.isHotfix;
 
 // Check options
 if (!config.isMergeableBranch) {
@@ -89,59 +90,39 @@ output zip file: ${config.outputZipFile}
         await execFile('git', ['checkout', config.targetBranch]);
         await execFile('git', ['pull']);
 
-        if (!config.isHotfix) {
+        if (config.isNormalRelease) {
             await execFile('git', ['checkout', '-b', config.releaseBranchName]);
         }
 
+        const branchToMerge = config.isHotfix ? config.targetBranch : config.releaseBranchName;
         const updatableFiles = ['./package.json', './package-lock.json','./src/manifest.json'];
+
         updatableFiles.map(filePath => setVersion(filePath, config.nextVersion));
-        // await execFile('git', ['archive', '-o', config.outputZipFile]);
         await execFile('git', ['add', '.']);
         await execFile('git', ['commit', '-a', '-m', config.commitMessage]);
+        await execFile('git', ['checkout', 'develop']);
+        await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
         await execFile('git', ['checkout', 'master']);
-        await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, config.targetBranch]);
-        await git.branchLocal((err, result) => {
-            config.masterCommit = result.branches.master;
-        }).addTag(config.nextTagName, (error, result) => {
-            errorHandler(error);
-            console.log(result);
-        });
+        await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
+        await execFile('git', ['checkout', 'master']);
+
+        // await git.branchLocal((err, result) => {
+        //     config.masterCommit = result.branches.master;
+        // }).addTag(config.nextTagName, (error, result) => {
+        //     errorHandler(error);
+        //     console.log(result);
+        // });
         // await execFile('git', ['tag', '-a', '--message', config.nextTagName]);
         await execFile('git', ['push', '-v', 'origin', `refs/tags/${config.nextTagName}`]);
         await execFile('git', ['push', 'origin']);
 
-        if (config.isHotfix) {
-            await execFile('git', ['checkout', 'develop']);
-            await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, config.targetBranch]);
-        }
+        // if (config.isHotfix) {
+        //     await execFile('git', ['checkout', 'develop']);
+        //     await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, config.targetBranch]);
+        // }
 
-        await execFile('git', ['checkout', 'master']);
+        // await execFile('git', ['checkout', 'master']);
         process.exit(0);
-    // await git
-    //         .checkout('master', errorHandler)
-    //         .pull(errorHandler)
-    //         .checkout(config.targetBranch, errorHandler)
-    //         .exec(async () => {
-    //             if (!config.isHotfix) {
-    //                 await git.checkoutLocalBranch(config.releaseBranchName, errorHandler);
-    //             }
-    //             const updatableFiles = ['./package.json', './package-lock.json','./src/manifest.json'];
-    //             updatableFiles.map(filePath => setVersion(filePath, config.nextVersion));
-    //             await git.exec(() => require('child_process').exec(`git archive -o ${config.outputZipFile}`));
-    //             const commitableFiles = [...updatableFiles, ...[config.outputZipFile]];
-    //             await git.add(commitableFiles, errorHandler).commit(config.commitMessage);
-    //             console.log('DOne archiving');
-    //         })
-    //         .checkout('master', errorHandler)
-    //         .merge([config.targetBranch, '--no-ff', '-m', `${config.commitMessage}`], errorHandler)
-    //         .exec(async () => {
-    //             return await require('child_process')
-    //                     .exec(`git tag -a ${config.nextTagName} && git push origin ${config.nextTagName}`);
-    //         })
-    //         .checkout(config.currentBranch, errorHandler)
-    //         .exec(() => {
-    //             console.log('Done. Inspect results and then: git checkout master && git push');
-    //         });
 };
 
 release();
