@@ -43,6 +43,7 @@ const errorHandler = (error) => {
 const setVersion = (filePath, version) => {
     let file = require(path.resolve(filePath));
     file.version = version;
+    console.log(filePath);
     return fs.writeFileSync(filePath, JSON.stringify(file, null, 2))
 };
 
@@ -65,41 +66,45 @@ const release = async () => {
             }
             config.latestTag = tags.latest;
             config.latestVersion = semver.clean(config.latestTag);
+            config.currentTagName = `v${config.latestVersion}`;
             config.nextVersion = semver.inc(config.latestVersion, config.semverLevel);
+            config.nextTagName = `v${config.nextVersion}`;
             config.releaseBranchName = `release/v${config.nextVersion}`;
             config.commitMessage = config.isHotfix ? config.targetBranch : config.releaseBranchName;
-            config.outputZipFile = path.resolve(`./releases/v${config.nextVersion}.zip`);
+            config.outputZipFile = path.resolve(`./releases/${config.nextTagName}.zip`);
         });
 
         console.log(`================================================================
-${config.semverLevel} release: v${config.latestVersion} -> v${config.nextVersion}
+${config.semverLevel} release: ${config.currentTagName} -> ${config.nextTagName}
 target branch: ${config.targetBranch}
 push on complete: ${config.pushOnComplete}
 current branch: ${config.currentBranch}
 release branch: ${config.releaseBranchName}
-output zip file: ${config.config.outputZipFile}
+output zip file: ${config.outputZipFile}
 ================================================================`);
 
     await git
             .checkout('master', errorHandler)
             .pull(errorHandler)
             .checkout(config.targetBranch, errorHandler)
-            .pull(errorHandler)
-            await git.exec(async () => {
+            .exec(async () => {
                 if (!config.isHotfix) {
                     await git.checkoutLocalBranch(config.releaseBranchName, errorHandler);
                 }
                 const updatableFiles = ['./package.json', './package-lock.json','./src/manifest.json'];
                 updatableFiles.map(filePath => setVersion(filePath, config.nextVersion));
-                await git.exec(() => require('child_process').exec(`git archive -o ${config.outputZipFile}`);)
+                await git.exec(() => require('child_process').exec(`git archive -o ${config.outputZipFile}`));
                 const commitableFiles = [...updatableFiles, ...[config.outputZipFile]];
                 await git.add(commitableFiles, errorHandler).commit(config.commitMessage);
             })
-            .mergeFromTo(config.targetBranch, 'master', ['--no-ff', '-m', `"${config.commitMessage}"`], errorHandler)
-            .checkout(config.currentBranch, errorHandler);
+            .checkout('master', errorHandler)
+            .merge([config.targetBranch, '--no-ff', '-m', `"${config.commitMessage}"`], errorHandler)
+            .tag(['-a', config.nextTagName])
+            .push('origin', 'master', [config.nextTagName])
+            .checkout(config.currentBranch, errorHandler)
             .exec(() => {
-                console.log('Done. Inspect results and then: git checkout master && git push ');
-            })
+                console.log('Done. Inspect results and then: git checkout master && git push');
+            });
 };
 
 release();

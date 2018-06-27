@@ -1,13 +1,13 @@
 {
   "name": "teston-chrome-extension",
-  "version": "0.1.13",
+  "version": "1.12.1",
   "description": "Chrome extenstion for recording Teston user sessions.",
   "author": "Franz von der Lippe <franz@teston.no>",
   "private": true,
   "scripts": {
     "build": "node utils/build.js",
     "start": "node utils/webserver.js",
-    "release": "node utils/makerelease.js"
+    "release": "node ./make-release.js"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^0.1.17",
