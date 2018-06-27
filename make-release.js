@@ -78,7 +78,6 @@ const release = async () => {
         console.log(`================================================================
 ${config.semverLevel} release: ${config.currentTagName} -> ${config.nextTagName}
 target branch: ${config.targetBranch}
-push on complete: ${config.pushOnComplete}
 current branch: ${config.currentBranch}
 release branch: ${config.releaseBranchName}
 output zip file: ${config.outputZipFile}
