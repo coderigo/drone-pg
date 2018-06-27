@@ -100,7 +100,7 @@ output zip file: ${config.outputZipFile}
         await execFile('git', ['commit', '-a', '-m', config.commitMessage]);
         await execFile('git', ['checkout', 'master']);
         await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, config.targetBranch]);
-        await execFile('git', ['tag', '-a', '-m', config.nextTagName]);
+        await execFile('git', ['tag', '-a', '-m', config.nextTagName, 'master']);
         await execFile('git', ['push', '-v', 'origin', `refs/tags/${config.nextTagName}`]);
         await execFile('git', ['push', 'origin']);
 
