@@ -43,6 +43,7 @@ const errorHandler = (error) => {
 const setVersion = (filePath, version) => {
     let file = require(path.resolve(filePath));
     file.version = version;
+    console.log(filePath);
     return fs.writeFileSync(filePath, JSON.stringify(file, null, 2))
 };
 

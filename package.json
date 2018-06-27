@@ -1,6 +1,6 @@
 {
   "name": "teston-chrome-extension",
-  "version": "0.1.13",
+  "version": "x.x.x",
   "description": "Chrome extenstion for recording Teston user sessions.",
   "author": "Franz von der Lippe <franz@teston.no>",
   "private": true,
