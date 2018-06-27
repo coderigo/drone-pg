@@ -10,33 +10,10 @@
     "release": "node ./make-release.js"
   },
   "devDependencies": {
-    "clean-webpack-plugin": "^0.1.17",
-    "copy-webpack-plugin": "^4.2.0",
-    "css-loader": "^0.25.0",
-    "file-loader": "^0.11.2",
-    "fs-extra": "^0.30.0",
-    "html-loader": "^0.4.5",
-    "html-webpack-plugin": "2.24.1",
-    "node-sass": "^4.9.0",
-    "sass-loader": "^6.0.7",
-    "style-loader": "^0.20.3",
-    "svg-inline-loader": "^0.8.0",
-    "webpack": "2.2.1",
-    "webpack-dev-server": "^2.3.0",
-    "write-file-webpack-plugin": "3.4.2"
   },
   "dependencies": {
-    "@teston/teston-styles": "^0.1.71",
-    "babel-polyfill": "^6.26.0",
     "commander": "^2.15.1",
-    "gcs-browser-upload": "^1.0.0",
-    "raven-js": "^3.25.0",
-    "retry": "^0.12.0",
     "semver": "^5.5.0",
-    "simple-git": "^1.96.0",
-    "url-loader": "^1.0.1",
-    "volume-meter": "^2.0.1",
-    "webext-inject-on-install": "^1.0.2",
-    "webrtc-adapter": "^6.1.4"
+    "simple-git": "^1.96.0"
   }
 }
