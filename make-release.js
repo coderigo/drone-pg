@@ -104,24 +104,10 @@ output zip file: ${config.outputZipFile}
         await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
         await execFile('git', ['checkout', 'master']);
         await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
-        await execFile('git', ['checkout', 'master']);
-
-        // await git.branchLocal((err, result) => {
-        //     config.masterCommit = result.branches.master;
-        // }).addTag(config.nextTagName, (error, result) => {
-        //     errorHandler(error);
-        //     console.log(result);
-        // });
-        // await execFile('git', ['tag', '-a', '--message', config.nextTagName]);
+        await git.addTag(config.nextTagName, errorHandler);
         await execFile('git', ['push', '-v', 'origin', `refs/tags/${config.nextTagName}`]);
         await execFile('git', ['push', 'origin']);
 
-        // if (config.isHotfix) {
-        //     await execFile('git', ['checkout', 'develop']);
-        //     await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, config.targetBranch]);
-        // }
-
-        // await execFile('git', ['checkout', 'master']);
         process.exit(0);
 };
 
