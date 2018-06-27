@@ -91,7 +91,7 @@ output zip file: ${config.config.outputZipFile}
                 }
                 const updatableFiles = ['./package.json', './package-lock.json','./src/manifest.json'];
                 updatableFiles.map(filePath => setVersion(filePath, config.nextVersion));
-                await git.exec(() => require('child_process').exec(`git archive -o ${config.outputZipFile}`);)
+                await git.exec(() => require('child_process').exec(`git archive -o ${config.outputZipFile}`));
                 const commitableFiles = [...updatableFiles, ...[config.outputZipFile]];
                 await git.add(commitableFiles, errorHandler).commit(config.commitMessage);
             })
