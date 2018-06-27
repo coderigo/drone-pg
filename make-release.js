@@ -93,6 +93,7 @@ output zip file: ${config.outputZipFile}
             await execFile('git', ['checkout', '-b', config.releaseBranchName]);
         }
 
+        const updatableFiles = ['./package.json', './package-lock.json','./src/manifest.json'];
         updatableFiles.map(filePath => setVersion(filePath, config.nextVersion));
         await execFile('git', ['archive', '-o', config.outputZipFile]);
         await execFile('git', [...['add'], ...updatableFiles, ...[config.outputZipFile]]);
