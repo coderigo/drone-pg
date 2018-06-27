@@ -1,28 +1,42 @@
+---
 workspace:
-  base: /drone
-  path: /tmp
+  base: /node
+  path: teston-chrome-extension
 
 pipeline:
-  # build:
-  #   image: golang:1.9
-  #   commands:
-  #     - env
-  #   when:
-  #     event: [push]
-  docker_make_tags_file:
-    image: eu.gcr.io/bold-upgrade-182112/teston-gcloud
-    pull: true
+  test:
+    image: eu.gcr.io/bold-upgrade-182112/teston-node
     commands:
-      - teston-docker-make-tags-file
-      - ls
+      - npm install
+      - npm run test
+    when:
+      branch: [ feature/*, hotfix/*, develop ]
+      event:
+        exclude: [ deployment ]
 
-  docker_push_image:
-    image: plugins/gcr
-    registry: eu.gcr.io
-    repo: bold-upgrade-182112/drone-pg
-    secrets: [ gcr_json_key ]
-
-  k8s_deploy_dev:
-    image: eu.gcr.io/bold-upgrade-182112/teston-gcloud
+  build:
+    image: eu.gcr.io/bold-upgrade-182112/teston-node
     commands:
-      - teston-k8s-deploy-image dev
+      - npm install
+      - npm run build
+
+  publish_to_chrome_webstore:
+    image: eu.gcr.io/bold-upgrade-182112/teston-node
+    commands:
+      - npm run make-package
+      - npm run publish-extension
+    when:
+      environment: production
+      branch: master
+      event: deployment
+
+  notify_prod:
+    image: plugins/slack
+    secrets: [ slack_webhook ]
+    channel: tech-announcements
+    username: drone
+    when:
+      environment: production
+      branch: master
+      event: deployment
+      status: [ success, failure ]
