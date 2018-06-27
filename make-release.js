@@ -83,6 +83,9 @@ release branch: ${config.releaseBranchName}
 output zip file: ${config.outputZipFile}
 ================================================================`);
 
+        const branchToMerge = config.isHotfix ? config.targetBranch : config.releaseBranchName;
+        const updatableFiles = ['./package.json', './package-lock.json','./src/manifest.json'];
+
         await execFile('git', ['checkout', 'master']);
         await execFile('git', ['pull']);
         await execFile('git', ['checkout', config.targetBranch]);
@@ -92,8 +95,6 @@ output zip file: ${config.outputZipFile}
             await execFile('git', ['checkout', '-b', config.releaseBranchName]);
         }
 
-        const branchToMerge = config.isHotfix ? config.targetBranch : config.releaseBranchName;
-        const updatableFiles = ['./package.json', './package-lock.json','./src/manifest.json'];
 
         updatableFiles.map(filePath => setVersion(filePath, config.nextVersion));
         await execFile('git', ['add', '.']);
