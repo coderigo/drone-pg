@@ -77,7 +77,7 @@ target branch: ${config.targetBranch}
 push on complete: ${config.pushOnComplete}
 current branch: ${config.currentBranch}
 release branch: ${config.releaseBranchName}
-output zip file: ${config.config.outputZipFile}
+output zip file: ${config.outputZipFile}
 ================================================================`);
 
     await git
