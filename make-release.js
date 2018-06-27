@@ -102,13 +102,14 @@ output zip file: ${config.outputZipFile}
 
         await execFile('git', ['checkout', 'develop']);
         await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
-        await execFile('git', ['push', 'origin', 'develop']);
 
         await execFile('git', ['checkout', 'master']);
         await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
         await git.addTag(config.nextTagName, errorHandler);
         await execFile('git', ['push', 'origin', `refs/tags/${config.nextTagName}`]);
-        await execFile('git', ['push', 'origin', 'master']);
+
+        await execFile('git', ['push', 'origin', 'develop:develop']);
+        await execFile('git', ['push', 'origin', 'master:master']);
 
         await execFile('git', ['branch', '-d', branchToMerge]);
 
