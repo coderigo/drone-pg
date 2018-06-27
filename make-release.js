@@ -101,6 +101,7 @@ output zip file: ${config.outputZipFile}
 
         await execFile('git', ['checkout', 'develop']);
         await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
+        await execFile('git', ['push', 'origin']);
 
         await execFile('git', ['checkout', 'master']);
         await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
