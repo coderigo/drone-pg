@@ -84,8 +84,7 @@ output zip file: ${config.outputZipFile}
             .checkout('master', errorHandler)
             .pull(errorHandler)
             .checkout(config.targetBranch, errorHandler)
-            .pull(errorHandler)
-            await git.exec(async () => {
+            .exec(async () => {
                 if (!config.isHotfix) {
                     await git.checkoutLocalBranch(config.releaseBranchName, errorHandler);
                 }
