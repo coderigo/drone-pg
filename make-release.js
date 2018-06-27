@@ -84,8 +84,33 @@ release branch: ${config.releaseBranchName}
 output zip file: ${config.outputZipFile}
 ================================================================`);
 
-        const { stdout, stderr } = await execFile('git', ['checkout', 'master']);
-        console.log(stdout, stderr);
+        await execFile('git', ['checkout', 'master']);
+        await execFile('git', ['pull']);
+        await execFile('git', ['checkout', config.targetBranch]);
+        await execFile('git', ['pull']);
+
+        if (!config.isHotfix) {
+            await execFile('git', ['checkout', '-b', config.releaseBranchName]);
+        }
+
+        updatableFiles.map(filePath => setVersion(filePath, config.nextVersion));
+        await execFile('git', ['archive', '-o', config.outputZipFile]);
+        await execFile('git', [...['add'], ...updatableFiles, ...[config.outputZipFile]]);
+        await execFile('git', ['commit', '-m', config.commitMessage]);
+        await execFile('git', ['checkout', 'master']);
+        await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, config.targetBranch]);
+        await execFile('git', ['tag', '-a', config.nextTagName]);
+        await execFile('git', ['push', config.nextTagName]);
+        await execFile('git', ['push', '-v', 'origin', `refs/tags/${config.nextTagName}`]);
+        await execFile('git', ['push', 'origin']);
+
+        if (config.isHotfix) {
+            await execFile('git', ['checkout', 'develop']);
+            await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, config.targetBranch]);
+        }
+
+        await execFile('git', ['checkout', 'master']);
+        console.log('DONE');
     // await git
     //         .checkout('master', errorHandler)
     //         .pull(errorHandler)
