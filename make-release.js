@@ -52,15 +52,16 @@ const setVersion = (filePath, version) => {
 
 // Release function
 const release = async () => {
-    await git.fetch()
-        .status((error, statusSummary) => {
+    exec('git fetch');
+
+    await git.status((error, statusSummary) => {
             errorHandler(error);
             const { files, staged, current } = statusSummary;
             config.currentBranch = `${current}`;
             config.gitIsClean = (statusSummary.files.length + statusSummary.staged.length) === 0;
-            // if (!config.gitIsClean) {
-            //     errorHandler(new Error(`Current tree not clean. Stash or commit changes before attempting this again.`));
-            // }
+            if (!config.gitIsClean) {
+                errorHandler(new Error(`Current tree not clean. Stash or commit changes before attempting this again.`));
+            }
         })
         .tags((error, tags) => {
             errorHandler(error);
@@ -88,10 +89,6 @@ output zip file: ${config.outputZipFile}
         const branchToMerge = config.isHotfix ? config.targetBranch : config.releaseBranchName;
         const updatableFiles = ['./package.json', './package-lock.json','./src/manifest.json'];
 
-        let code;
-        let stdout;
-        let stderr;
-
         exec('git checkout master && git pull');
         exec(`git checkout ${config.targetBranch} && git pull`);
 
@@ -101,7 +98,6 @@ output zip file: ${config.outputZipFile}
 
         updatableFiles.map(filePath => setVersion(filePath, config.nextVersion));
         exec(`git commit -am ${config.commitMessage}`);
-        // exec('git add .');
 
         exec('git checkout develop');
         exec(`git merge --no-ff -m ${config.commitMessage} ${branchToMerge}`);
