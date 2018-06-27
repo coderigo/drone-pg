@@ -98,8 +98,10 @@ output zip file: ${config.outputZipFile}
         updatableFiles.map(filePath => setVersion(filePath, config.nextVersion));
         await execFile('git', ['add', '.']);
         await execFile('git', ['commit', '-a', '-m', config.commitMessage]);
+
         await execFile('git', ['checkout', 'develop']);
         await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
+
         await execFile('git', ['checkout', 'master']);
         await execFile('git', ['merge', '--no-ff', '-m', config.commitMessage, branchToMerge]);
         await git.addTag(config.nextTagName, errorHandler);
