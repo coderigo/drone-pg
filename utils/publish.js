@@ -45,7 +45,7 @@ async function publish () {
     };
 
     exec('pwd && ls');
-    const { version } = require('./package.json');
+    const version = exec('node -p "require(\'./package.json\').version"').stdout;
     const zipFile = path.resolve(`./v${version}.zip`);
     const buildDir = path.resolve('./build');
     const manifestPath = path.join(buildDir, 'manifest.json');
