@@ -66,7 +66,18 @@ zip file: ${zipFile}
     // Keep all commands with {silent: true} to avoid spilling secrets
     // into build logs.
     const { client_id, client_secret, refresh_token } = webstoreConfig.oAuth;
+    console.log(`
+==================
+GETTING ACCESS TOKEN. URL: https://accounts.google.com/o/oauth2/token
+===========================
+`);
     const accessToken = exec(`curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${client_id}&client_secret=${client_secret}&refresh_token=${refresh_token}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token`, {silent: false}).stdout;
+
+    console.log(`
+==================
+UPLOADING ZIP FILE. URL: https://www.googleapis.com/upload/chromewebstore/v1.1/items
+===========================
+`);
 
     const uploadResult = exec(`curl -H "Authorization: Bearer ${accessToken}" -H "x-goog-api-version: 2" -X PUT -T ${zipFile} -v "https://www.googleapis.com/upload/chromewebstore/v1.1/items/${webstoreConfig.extensionId}"`,
                               {silent: false});
@@ -74,6 +85,12 @@ zip file: ${zipFile}
         console.log(`Failed to upload to chrome webstore: ${publishResult.stderr}`);
         process.exit(1);
     }
+
+    console.log(`
+==================
+PUBLISHING. URL: https://www.googleapis.com/upload/chromewebstore/v1.1/items/${webstoreConfig.extensionId}/publish
+===========================
+`);
 
     const publishResult = exec(`curl -H "Authorization: Bearer ${accessToken}" -H "x-goog-api-version: 2" -H "Content-Length: 0" -X POST -v "https://www.googleapis.com/chromewebstore/v1.1/items/${webstoreConfig.extensionId}/publish"`, {silent: false});
     if (publishResult.code !== 0) {
