@@ -79,8 +79,8 @@ async function release() {
             config.currentTagName = `v${config.latestVersion}`;
             config.nextVersion = semver.inc(config.latestVersion, config.semverLevel);
             config.nextTagName = `v${config.nextVersion}`;
-            config.releaseBranchName = `release/v${config.nextVersion}`;
-            config.commitMessage = config.isHotfix ? config.targetBranch : config.releaseBranchName;
+            config.releaseBranchName = `release/${config.nextTagName}`;
+            config.commitMessage = config.isHotfix ? `${config.targetBranch}_${config.nextTagName}` : config.releaseBranchName;
             config.outputZipFile = path.resolve(`./releases/${config.nextTagName}.zip`);
         });
 
