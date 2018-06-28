@@ -5,9 +5,11 @@
   "author": "Franz von der Lippe <franz@teston.no>",
   "private": true,
   "scripts": {
-    "build": "node utils/build.js",
+    "build": "npm install && node utils/build.js",
     "start": "node utils/webserver.js",
-    "release": "node ./make-release.js"
+    "release": "node utils/release.js",
+    "publish": "npm run build && node utils/publish.js",
+    "test": "echo boo-no-tests-yet"
   },
   "devDependencies": {
     "shelljs": "^0.8.2"
