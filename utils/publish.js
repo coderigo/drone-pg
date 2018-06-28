@@ -44,7 +44,7 @@ async function publish () {
         extensionId: 'cgdbbdcopmjndpjphncfaaeghknelfpi'
     };
 
-    const version = exec('node -p "require(\'./package.json\').version"').stdout;
+    const version = exec('echo -n $(node -p "require(\'./package.json\').version")').stdout;
     const rootDir = path.resolve('.');
     const zipFile = path.join(rootDir, `v${version}.zip`);
     const buildDir = path.join(rootDir, 'build');
