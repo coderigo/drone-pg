@@ -45,13 +45,18 @@ async function publish () {
     };
 
     const version = exec('node -p "require(\'./package.json\').version"').stdout;
-    const zipFile = path.resolve(`./v${version}.zip`);
-    const buildDir = path.resolve('./build');
+    const rootDir = path.resolve('.');
+    const zipFile = path.join(rootDir, `v${version}.zip`);
+    const buildDir = path.join(rootDir, 'build');
     const manifestPath = path.join(buildDir, 'manifest.json');
     const manifest = require(manifestPath);
     manifest.version = version;
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
-    console.log(`Publising v${version} to the webstore.`);
+    console.log(`==================
+Publising v${version} to the webstore.
+zip file: ${zipFile}
+===========================
+`);
     exec(`rm ${zipFile}`);
     exec(`zip -r ${zipFile} ${buildDir}`);
 
