@@ -21,7 +21,7 @@ async function publish () {
     });
     const requiredEnvVars = ['CHROME_WEBSTORE_OAUTH_SECRET', 'CHROME_WEBSTORE_OAUTH_REFRESH_TOKEN'];
     requiredEnvVars.map(envVar => {
-        if (process.env[envVar]) {
+        if (!process.env[envVar]) {
             console.log(`env var CHROME_WEBSTORE_OAUTH_SECRET required for publishing and not set.`);
             process.exit(1);
         }
