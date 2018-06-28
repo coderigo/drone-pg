@@ -1,11 +1,12 @@
 ---
 workspace:
-  base: /node
-  path: teston-chrome-extension
+  base: /usr/local/teston/app
+  path: drone-pg
 
 pipeline:
   test:
     image: eu.gcr.io/bold-upgrade-182112/teston-node
+    pull: true
     commands:
       - npm install
       - npm run test
@@ -16,15 +17,19 @@ pipeline:
 
   build:
     image: eu.gcr.io/bold-upgrade-182112/teston-node
+    pull: true
     commands:
-      - npm install
       - npm run build
+    when:
+      environment: production
+      branch: master
+      event: deployment
 
   publish_to_chrome_webstore:
     image: eu.gcr.io/bold-upgrade-182112/teston-node
     commands:
-      - npm run make-package
-      - npm run publish-extension
+      - npm run publish
+    secrets: [chrome_webstore_oauth_refresh_token, chrome_webstore_oauth_secret]
     when:
       environment: production
       branch: master

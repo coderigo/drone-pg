@@ -3,3 +3,4 @@ node_modules
 build
 secrets.*.js
 *error.log
+*.zip

@@ -1,13 +1,15 @@
 {
-  "name": "teston-chrome-extension",
-  "version": "1.22.1",
+  "name": "roddern-chrome-extension",
+  "version": "1.23.0",
   "description": "Chrome extenstion for recording Teston user sessions.",
-  "author": "Franz von der Lippe <franz@teston.no>",
+  "author": "roddern@gmail.com",
   "private": true,
   "scripts": {
-    "build": "node utils/build.js",
+    "build": "npm install && node utils/build.js",
     "start": "node utils/webserver.js",
-    "release": "node ./make-release.js"
+    "release": "node utils/release.js",
+    "publish": "npm run build && node utils/publish.js",
+    "test": "echo boo-no-tests-yet"
   },
   "devDependencies": {
     "shelljs": "^0.8.2"
