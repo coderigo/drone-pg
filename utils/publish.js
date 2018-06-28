@@ -82,7 +82,7 @@ UPLOADING ZIP FILE. URL: https://www.googleapis.com/upload/chromewebstore/v1.1/i
     const uploadResult = exec(`echo -n $(curl -H "Authorization: Bearer ${accessToken}" -H "x-goog-api-version: 2" -X PUT -T ${zipFile} -v "https://www.googleapis.com/upload/chromewebstore/v1.1/items/${webstoreConfig.extensionId}" | jq .uploadState)`,
                               {silent: true});
     if (uploadResult.stdout !== 'SUCCESS') {
-        console.log(`Failed to upload to chrome webstore: ${publishResult.stdout}`);
+        console.log(`Failed to upload to chrome webstore: ${uploadResult.stdout}`);
         process.exit(1);
     }
 
