@@ -71,7 +71,7 @@ zip file: ${zipFile}
 GETTING ACCESS TOKEN. URL: https://accounts.google.com/o/oauth2/token
 ===========================
 `);
-    const accessToken = exec(`curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${client_id}&client_secret=${client_secret}&refresh_token=${refresh_token}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token`, {silent: false}).stdout;
+    const accessToken = exec(`echo -n $(curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${client_id}&client_secret=${client_secret}&refresh_token=${refresh_token}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token)`, {silent: false}).stdout;
 
     console.log(`
 ==================
