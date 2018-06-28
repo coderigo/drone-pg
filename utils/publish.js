@@ -48,7 +48,7 @@ async function publish () {
     const zipFile = path.resolve(`./v${version}.zip`);
     const buildDir = path.resolve('./build');
     const manifestPath = path.join(buildDir, 'manifest.json');
-    const manifest = JSON.parse(exec(`node -p "require(\'${manifestPath}\')"`).stdout);
+    const manifest = require(manifestPath);
     manifest.version = version;
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
     console.log(`Publising v${version} to the webstore.`);
