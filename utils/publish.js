@@ -44,6 +44,7 @@ async function publish () {
         extensionId: 'cgdbbdcopmjndpjphncfaaeghknelfpi'
     };
 
+    exec('pwd && ls');
     const { version } = require('./package.json');
     const zipFile = path.resolve(`./v${version}.zip`);
     const buildDir = path.resolve('./build');
