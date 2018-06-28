@@ -1,6 +1,6 @@
 {
   "name": "roddern-chrome-extension",
-  "version": "1.23.13",
+  "version": "1.23.14",
   "description": "Chrome extenstion for recording Teston user sessions.",
   "author": "roddern@gmail.com",
   "private": true,
