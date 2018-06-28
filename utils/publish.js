@@ -71,7 +71,7 @@ zip file: ${zipFile}
 GETTING ACCESS TOKEN. URL: https://accounts.google.com/o/oauth2/token
 ===========================
 `);
-    const accessToken = exec(`echo -n $(curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${client_id}&client_secret=${client_secret}&refresh_token=${refresh_token}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token)`, {silent: false}).stdout;
+    const accessToken = exec(`echo -n $(curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${client_id}&client_secret=${client_secret}&refresh_token=${refresh_token}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token)`, {silent: true}).stdout;
 
     console.log(`
 ==================
@@ -79,10 +79,10 @@ UPLOADING ZIP FILE. URL: https://www.googleapis.com/upload/chromewebstore/v1.1/i
 ===========================
 `);
 
-    const uploadResult = exec(`curl -H "Authorization: Bearer ${accessToken}" -H "x-goog-api-version: 2" -X PUT -T ${zipFile} -v "https://www.googleapis.com/upload/chromewebstore/v1.1/items/${webstoreConfig.extensionId}"`,
-                              {silent: false});
-    if (uploadResult.code !== 0) {
-        console.log(`Failed to upload to chrome webstore: ${publishResult.stderr}`);
+    const uploadResult = exec(`echo -n $(curl -H "Authorization: Bearer ${accessToken}" -H "x-goog-api-version: 2" -X PUT -T ${zipFile} -v "https://www.googleapis.com/upload/chromewebstore/v1.1/items/${webstoreConfig.extensionId}" | jq .uploadState)`,
+                              {silent: true});
+    if (uploadResult.stdout !== 'SUCCESS') {
+        console.log(`Failed to upload to chrome webstore: ${publishResult.stdout}`);
         process.exit(1);
     }
 
@@ -92,8 +92,8 @@ PUBLISHING. URL: https://www.googleapis.com/upload/chromewebstore/v1.1/items/${w
 ===========================
 `);
 
-    const publishResult = exec(`curl -H "Authorization: Bearer ${accessToken}" -H "x-goog-api-version: 2" -H "Content-Length: 0" -X POST -v "https://www.googleapis.com/chromewebstore/v1.1/items/${webstoreConfig.extensionId}/publish"`, {silent: false});
-    if (publishResult.code !== 0) {
+    const publishResult = exec(`echo -n $(curl -H "Authorization: Bearer ${accessToken}" -H "x-goog-api-version: 2" -H "Content-Length: 0" -X POST -v "https://www.googleapis.com/chromewebstore/v1.1/items/${webstoreConfig.extensionId}/publish")`, {silent: true});
+    if (JSON.parse(publishResult.stdout).status[0] !== 'OK') {
         console.log(`Failed to publish to chrome webstore: ${publishResult.stderr}`);
         process.exit(1);
     }
