@@ -37,12 +37,11 @@ async function publish () {
     // curl "https://accounts.google.com/o/oauth2/token" -d "client_id=$CLIENT_ID&client_secret=$CLIENT_SECRET&code=$CODE&grant_type=authorization_code&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq '.refresh_token'
     const webstoreConfig = {
         oAuth: {
-            name: 'teston-chrome-extension-drone',
-            client_id: '153584457492-3giubriurd04mfro8gipdrk8ac5od8uc.apps.googleusercontent.com',
+            client_id: '765376918327-n50m9cuqu1uoopm4qsu5kq5jahtfq1h7.apps.googleusercontent.com',
             client_secret: process.env.CHROME_WEBSTORE_OAUTH_SECRET,
             refresh_token: process.env.CHROME_WEBSTORE_OAUTH_REFRESH_TOKEN
         },
-        extensionId: 'lbhpkoeellhnhgobljbdijipbpmpmmhn'
+        extensionId: 'cgdbbdcopmjndpjphncfaaeghknelfpi'
     };
 
     const { version } = require('package.json');
