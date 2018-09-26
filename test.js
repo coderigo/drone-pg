@@ -1,3 +1,3 @@
-const { gitflow } = require('./lib/gitflow');
+const gitflow = require('./lib/gitflow');
 
 gitflow.release();
