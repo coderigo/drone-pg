@@ -1,22 +1,21 @@
 {
-  "name": "roddern-chrome-extension",
-  "version": "1.23.15",
-  "description": "Chrome extenstion for recording Teston user sessions.",
-  "author": "roddern@gmail.com",
-  "private": true,
+  "name": "coderigo/drone-pg",
+  "version": "0.1.7",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "build": "npm install && node utils/build.js",
-    "start": "node utils/webserver.js",
-    "release": "node utils/release.js",
-    "publish": "npm run build && node utils/publish.js",
-    "test": "echo boo-no-tests-yet"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "devDependencies": {
-    "shelljs": "^0.8.2"
+  "repository": {
+    "type": "git",
+    "url": "github.com/teston/teston-node-utils"
   },
+  "author": "Teston",
+  "license": "ISC",
   "dependencies": {
     "commander": "^2.15.1",
     "semver": "^5.5.0",
-    "simple-git": "^1.96.0"
+    "shelljs": "^0.8.2",
+    "winston": "^3.0.0"
   }
 }
