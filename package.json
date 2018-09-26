@@ -1,6 +1,6 @@
 {
   "name": "coderigo-drone-pg",
-  "version": "0.1.7",
+  "version": "1.24.0",
   "description": "",
   "main": "index.js",
   "scripts": {
